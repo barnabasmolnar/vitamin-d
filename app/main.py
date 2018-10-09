@@ -10,7 +10,6 @@ import pendulum
 from iso3166 import countries
 from credentials import API_KEY, SECRET_KEY
 
-API_KEY = API_KEY
 API_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
 app = Flask(__name__)
@@ -22,6 +21,10 @@ def get_data(form):
     payload = {"q": form.city.data, "APPID": API_KEY, "units": "metric" }
     r = requests.get(API_URL, params=payload)
     res = r.json()
+
+    if res["cod"] != "200":
+        err = res["message"]
+        return render_template('index.html', form=form, err=err)
 
     city_data = res["city"]
     weather_list = res["list"]

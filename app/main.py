@@ -9,17 +9,22 @@ from timezonefinder import TimezoneFinder
 import pendulum
 from iso3166 import countries
 from credentials import API_KEY, SECRET_KEY
+import requests_cache
 
 API_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+# Cache requests for 1 hour
+requests_cache.install_cache('req_cache', backend='sqlite', expire_after=3600)
+
 tf = TimezoneFinder()
 
 def get_data(form):
     payload = {"q": form.city.data, "APPID": API_KEY, "units": "metric" }
     r = requests.get(API_URL, params=payload)
+
     res = r.json()
 
     if res["cod"] != "200":

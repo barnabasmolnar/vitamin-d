@@ -1,3 +1,4 @@
 .vscode
 app/credentials.py
 app/__pycache__
+app/req_cache.sqlite
